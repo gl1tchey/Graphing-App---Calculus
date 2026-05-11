@@ -1,26 +1,38 @@
 import tkinter as tk
 
-THEME = {
-    "bg_main": "#0b0e14", "bg_sidebar": "#151921", "bg_card": "#1c222d",
-    "accent": "#7c4dff", "secondary": "#00e5ff", "text": "#ffffff",
-    "danger": "#ff5252", "success": "#00c853", "grid": "#232933"
+# the colors for the dark theme
+theme = {
+    "bg": "#0f1117",
+    "sidebar": "#1a1d27",
+    "card": "#22263a",
+    "border": "#2e3352",
+    "accent1": "#6c63ff", # purple for original function
+    "accent2": "#00d4aa", # teal for derivative
+    "accent3": "#ff6584", # pink for integral
+    "accent4": "#ffd166", # amber for area between
+    "text": "#e2e8f0",
+    "subtext": "#8892b0",
+    "input_bg": "#12151f"
 }
 
-def create_sidebar_button(parent, text, command, type="default"):
-    bg = THEME["success"] if type == "success" else THEME["bg_card"]
-    return tk.Button(parent, text=text, command=command, bg=bg, fg="white", 
-                     font=("Segoe UI", 9, "bold"), relief="flat", padx=20, pady=10, cursor="hand2")
+# makes a small title for sections
+def create_label(parent, text, is_header=False):
+    font = ("Segoe UI", 14, "bold") if is_header else ("Segoe UI", 8)
+    color = theme["accent1"] if is_header else theme["subtext"]
+    return tk.Label(parent, text=text, bg=theme["sidebar"], fg=color, font=font)
 
-def create_function_row(parent, on_delete, on_change):
-    frame = tk.Frame(parent, bg=THEME["bg_card"], pady=8, padx=12)
-    var = tk.StringVar()
-    var.trace_add("write", lambda *args: on_change())
+# a basic text input box
+def create_entry(parent, var):
+    return tk.Entry(parent, textvariable=var, bg=theme["input_bg"], fg=theme["text"], 
+                    insertbackground="white", borderwidth=0, font=("Consolas", 11))
 
-    tk.Label(frame, text="f(x)=", bg=THEME["bg_card"], fg=THEME["secondary"], font=("Consolas", 11, "bold")).pack(side="left")
-    entry = tk.Entry(frame, textvariable=var, bg="#252b37", fg="white", borderwidth=0, 
-                     insertbackground="white", highlightthickness=1, highlightbackground="#3a4253")
-    entry.pack(side="left", fill="x", expand=True, padx=8)
+# a tiny input box for things like ranges
+def create_small_entry(parent, var):
+    return tk.Entry(parent, textvariable=var, bg=theme["input_bg"], fg=theme["text"], 
+                    insertbackground="white", borderwidth=0, font=("Consolas", 10), width=7)
 
-    tk.Button(frame, text="✕", command=lambda: on_delete(frame), 
-              bg=THEME["bg_card"], fg=THEME["danger"], borderwidth=0).pack(side="right")
-    return frame, entry, var
+# a button that matches our theme
+def create_btn(parent, text, cmd, primary=True):
+    bg_color = theme["accent1"] if primary else theme["card"]
+    return tk.Button(parent, text=text, command=cmd, bg=bg_color, fg="white", 
+                     font=("Segoe UI", 9, "bold"), relief="flat", cursor="hand2", pady=6)
